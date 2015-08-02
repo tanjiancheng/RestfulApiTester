@@ -1,0 +1,136 @@
+<h2>Run</h2>
+<div class="ui form">
+    <div class="two fields">
+        <div class="field">
+            <label>Group</label>
+            <select name="group" class="ui search dropdown"></select>
+        </div>
+        <div class="field">
+            <label>Name</label>
+            <select name="name" class="ui search dropdown"></select>
+            <input name="desc" type="hidden" value="" />
+            <input name="method" type="hidden" value="" />
+            <input name="url" type="hidden" value="" />
+        </div>
+    </div>
+
+    <div name="params" class="field">
+        <label>Params</label>
+        <div data-item="hide" class="two fields" style="display: none;">
+            <div class="field">
+                <input name="key" type="text" placeholder="key" />
+            </div>
+            <div class="field">
+                <div class="ui action input">
+                    <input name="value" type="text" placeholder="value" />
+                    <div data-item="minus" class="ui icon button">
+                        <i class="icon minus circle"></i>
+                    </div>
+                    <div data-item="add" class="ui icon button">
+                        <i class="icon add circle"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="field">
+        <button name="submit" class="ui primary button">Run</button>
+    </div>
+
+    <div name="result" style="display: none;">
+        <div name="request" class="field">
+            <label>Request</label>
+        </div>
+
+        <div name="response" class="field">
+            <label>Response</label>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $('[name="params"]').addParams(2);
+
+    (function() {
+        var env = getEnv();
+        var tests = getTests();
+        var el = $('select[name="group"]');
+        for (var group in tests) {
+            var option = $('<option/>').val(group).text(group);
+            el.append(option);
+        }
+
+        $('select[name="name"]').change(function() {
+            var group = $('select[name="group"]').val();
+            var name = $('select[name="name"]').val();
+            for (var i = 0; i < tests[group].length; i++) {
+                if (tests[group][i].name == name) {
+                    $('input[name="desc"]').val(tests[group][i].desc);
+                    $('input[name="url"]').val(tests[group][i].url);
+                    $('input[name="method"]').val(tests[group][i].method);
+                    var params = $('[name="params"]');
+                    params.deleteAllParams();
+                    params.addParams(2);
+                    params.initParams(tests[group][i].params);
+                }
+            }
+        });
+
+        el.change(function() {
+            var group = $(this).val();
+            var el = $('select[name="name"]');
+            $('option', el).remove();
+            for (var i = 0; i < tests[group].length; i++) {
+                var name = tests[group][i].name;
+                var option = $('<option/>').val(name).text(name);
+                el.append(option);
+            }
+
+            el.trigger('change');
+            var options = $('option', el);
+            if (options.size() > 0) {
+                el.dropdown('set text', $(options[0]).text());
+                el.dropdown('set value', el.val());
+            } else {
+                el.dropdown('set text', '');
+                el.dropdown('set value', '');
+            }
+        });
+
+        $('[name="submit"]').click(function() {
+            if ($(this).data('lock')) {
+                return;
+            }
+
+            $(this).data('lock', true).addClass('loading');
+            $('[name="request"] div').remove();
+            $('[name="response"] div').remove();
+            $('[name="result"]').hide();
+
+            var request = {};
+            request.url = String($('[name="url"]').val()).replace(/\{\w+\}/g, function(str) {
+                return env[str.substr(1, str.length-2)];
+            });
+            request.method = $('[name="method"]').val();
+            request.params = $('[name="params"]').getParams();
+
+            $('[name="request"]').append($('<div/>').html(JSON.stringify(request)).rainbowJSON());
+
+            $.ajax({
+                url: request.url,
+                data: request.params,
+                type: request.method,
+                dataType: 'text',
+                success: function(html) {
+                    $('[name="result"]').show();
+                    html = html.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                    $('[name="response"]').append($('<div/>').html(html).rainbowJSON());
+                    $('[name="submit"]').data('lock', false).removeClass('loading');
+                }
+            });
+        });
+    })();
+
+    $('.ui.dropdown').dropdown();
+</script>

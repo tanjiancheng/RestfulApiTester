@@ -1,0 +1,27 @@
+{
+    "tests": [
+        {
+            "group": "hello",
+            "name": "get_package_info",
+            "desc": "测试示例 - 获取软件描述信息",
+            "method": "POST",
+            "url": "{hello_base_url}/package.json",
+            "params": {
+                "version": "0.1.0"
+            }
+        },
+        {
+            "group": "hello",
+            "name": "{hello_base_url}/get_config_info",
+            "desc": "测试示例 - 获取配置信息",
+            "method": "GET",
+            "url": "config.json",
+            "params": {
+
+            }
+        }
+    ],
+    "env": {
+        "hello_base_url": "."
+    }
+}

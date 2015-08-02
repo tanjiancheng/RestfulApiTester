@@ -1,0 +1,112 @@
+<h2>Edit</h2>
+<div class="ui form">
+    <div class="two fields">
+        <div class="field">
+            <label>Group</label>
+            <input name="group" type="text" readonly="true" />
+        </div>
+        <div class="field">
+            <label>Name</label>
+            <input name="name" type="text" readonly="true" />
+        </div>
+    </div>
+
+    <div class="field">
+        <label>Description</label>
+        <input name="desc" type="text" />
+    </div>
+
+    <div class="field">
+        <label>Url</label>
+        <div class="ui left labeled input">
+            <div class="ui dropdown label">
+                <div name="method" class="text">GET</div>
+                <i class="dropdown icon"></i>
+                <div class="menu">
+                    <div class="item">GET</div>
+                    <div class="item">POST</div>
+                </div>
+            </div>
+            <input name="url" type="text" placeholder="http://" />
+        </div>
+    </div>
+
+    <div name="params" class="field">
+        <label>Params</label>
+        <div data-item="hide" class="two fields" style="display: none;">
+            <div class="field">
+                <input name="key" type="text" placeholder="key" />
+            </div>
+            <div class="field">
+                <div class="ui action input">
+                    <input name="value" type="text" placeholder="value" />
+                    <div data-item="minus" class="ui icon button">
+                        <i class="icon minus circle"></i>
+                    </div>
+                    <div data-item="add" class="ui icon button">
+                        <i class="icon add circle"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="field">
+        <button name="submit" class="ui primary button">Save</button>
+        <button name="cancel" class="ui button">Cancel</button>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $('[name="params"]').addParams(2);
+
+    (function() {
+        var test = global('list_edit_test');
+        global('list_edit_test', undefined);
+
+        if (typeof test != 'object') {
+            return;
+        }
+
+        $('[name="group"]').val(test.group);
+        $('[name="name"]').val(test.name);
+        $('[name="desc"]').val(test.desc);
+        $('[name="method"]').text(test.method);
+        $('[name="url"]').val(test.url);
+        $('[name="params"]').initParams(test.params);
+    })();
+
+    $('[name="cancel"]').click(function() {
+        global('list_edit_test', undefined);
+        loadTemplate('list');
+    });
+
+    $('[name="submit"]').click(function() {
+        if ($(this).data('lock')) {
+            return;
+        }
+
+        $(this).data('lock', true);
+
+        var data = {};
+        data.group = $('[name="group"]').val();
+        data.name = $('[name="name"]').val();
+        data.desc = $('[name="desc"]').val();
+        data.method = $('[name="method"]').text();
+        data.url = $('[name="url"]').val();
+        data.params = $('[name="params"]').getParams();
+
+        var res = setTest(data);
+        if (!res[0]) {
+            alert(res[1]);
+            $(this).data('lock', false);
+            return;
+        } else {
+            alert(res[1]);
+            $(this).data('lock', false);
+            loadTemplate('list');
+        }
+    });
+
+    $('.ui.dropdown').dropdown();
+</script>

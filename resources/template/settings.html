@@ -1,0 +1,49 @@
+<h2>Settings</h2>
+<div class="ui form">
+    <div name="env" class="field">
+        <label>Environment</label>
+        <div data-item="hide" class="two fields" style="display: none;">
+            <div class="field">
+                <input name="key" type="text" placeholder="key" />
+            </div>
+            <div class="field">
+                <div class="ui action input">
+                    <input name="value" type="text" placeholder="value" />
+                    <div data-item="minus" class="ui icon button">
+                        <i class="icon minus circle"></i>
+                    </div>
+                    <div data-item="add" class="ui icon button">
+                        <i class="icon add circle"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="field">
+        <button name="submit" class="ui primary button">Save</button>
+    </div>
+</div>
+
+<script type="text/javascript">
+    (function () {
+        var env = $('[name="env"]')
+        env.addParams(2);
+        env.initParams(getEnv());
+    })();
+
+    $('[name="submit"]').click(function() {
+        if ($(this).data('lock')) {
+            return;
+        }
+
+        $(this).data('lock', true);
+        var res = setEnv($('[name="env"]').getParams());
+
+        alert(res[1]);
+        if (res[0]) {
+            switchTab('settings');
+        }
+        $(this).data('lock', false);
+    });
+</script>

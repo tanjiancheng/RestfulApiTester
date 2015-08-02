@@ -1,0 +1,89 @@
+<h2>Add</h2>
+<div class="ui form">
+    <div class="two fields">
+        <div class="field">
+            <label>Group</label>
+            <input name="group" type="text" />
+        </div>
+        <div class="field">
+            <label>Name</label>
+            <input name="name" type="text" />
+        </div>
+    </div>
+
+    <div class="field">
+        <label>Description</label>
+        <input name="desc" type="text" />
+    </div>
+
+    <div class="field">
+        <label>Url</label>
+        <div class="ui left labeled input">
+            <div class="ui dropdown label">
+                <div name="method" class="text">GET</div>
+                <i class="dropdown icon"></i>
+                <div class="menu">
+                    <div class="item">GET</div>
+                    <div class="item">POST</div>
+                </div>
+            </div>
+            <input name="url" type="text" placeholder="http://" />
+        </div>
+    </div>
+
+    <div name="params" class="field">
+        <label>Params</label>
+        <div data-item="hide" class="two fields" style="display: none;">
+            <div class="field">
+                <input name="key" type="text" placeholder="key" />
+            </div>
+            <div class="field">
+                <div class="ui action input">
+                    <input name="value" type="text" placeholder="value" />
+                    <div data-item="minus" class="ui icon button">
+                        <i class="icon minus circle"></i>
+                    </div>
+                    <div data-item="add" class="ui icon button">
+                        <i class="icon add circle"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="field">
+        <button name="submit" class="ui primary button">Save</button>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $('.ui.dropdown').dropdown();
+    $('[name="params"]').addParams(2);
+
+    $('[name="submit"]').click(function() {
+        if ($(this).data('lock')) {
+            return;
+        }
+
+        $(this).data('lock', true);
+
+        var data = {};
+        data.group = $('[name="group"]').val();
+        data.name = $('[name="name"]').val();
+        data.desc = $('[name="desc"]').val();
+        data.method = $('[name="method"]').text();
+        data.url = $('[name="url"]').val();
+        data.params = $('[name="params"]').getParams();
+
+        var res = addTest(data);
+        if (!res[0]) {
+            alert(res[1]);
+            $(this).data('lock', false);
+            return;
+        } else {
+            alert(res[1]);
+            $(this).data('lock', false);
+            switchTab('add');
+        }
+    });
+</script>
