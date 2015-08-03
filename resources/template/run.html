@@ -121,8 +121,14 @@
                 url: request.url,
                 data: request.params,
                 type: request.method,
-                dataType: 'text',
-                success: function(html) {
+                complete: function(xhr) {
+                    console.log(new Date(), xhr.status, xhr);
+                    if (xhr.status == 200) {
+                        var html = xhr.responseText;
+                    } else {
+                        var html = xhr.status+' '+xhr.statusText+"\n"+xhr.responseText;
+                    }
+
                     $('[name="result"]').show();
                     html = html.replace(/</g, '&lt;').replace(/>/g, '&gt;');
                     $('[name="response"]').append($('<div/>').html(html).rainbowJSON());
