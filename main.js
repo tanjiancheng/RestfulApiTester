@@ -16,7 +16,7 @@ app.on('ready', function() {
 
     Menu.setApplicationMenu(Menu.buildFromTemplate([
         {
-            label: 'Restful Api Tester',
+            label: 'Tools',
             submenu: [
                 {
                     label: 'Open Developer Tools',
