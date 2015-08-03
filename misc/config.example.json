@@ -12,10 +12,10 @@
         },
         {
             "group": "hello",
-            "name": "{hello_base_url}/get_config_info",
+            "name": "get_config_info",
             "desc": "测试示例 - 获取配置信息",
             "method": "GET",
-            "url": "config.json",
+            "url": "{hello_base_url}/.config.json",
             "params": {
 
             }
