@@ -11,6 +11,14 @@ require('./resources/third-party/jquery.rainbowJSON/js/jquery.rainbowJSON.js');
 var fs = require('fs');
 var configFile = __dirname + '/.config.json';
 
+function setConfigFile(filename) {
+    var _configFile = String(filename);
+    if (fs.existsSync(_configFile)) {
+        configFile = _configFile;
+        switchTab('list');
+    }
+}
+
 function global(key, value) {
     if (typeof this.data != 'object') {
         this.data = {};
@@ -39,7 +47,7 @@ function ucfirst(str) {
 function switchTab(name) {
     $('#menu a').removeClass('hover');
     $('#menu a[data-tab="'+name+'"]').addClass('hover');
-    $('title').html(ucfirst(name));
+    $('title').html(ucfirst(name)+' - '+configFile);
     global();
     loadTemplate(name);
 }

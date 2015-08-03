@@ -1,6 +1,7 @@
 var app = require('app');
 var Menu = require('menu');
 var BrowserWindow = require('browser-window');
+var dialog = require('dialog');
 
 app.on('window-all-closed', function() {
     app.quit();
@@ -24,6 +25,28 @@ app.on('ready', function() {
                     click: function() {
                         mainWindow.openDevTools({
                             detach: true
+                        });
+                    }
+                },
+                {
+                    label: 'Load Config File',
+                    accelerator: 'Command+O',
+                    click: function() {
+                        dialog.showOpenDialog(mainWindow, {
+                            filters: [
+                                {name: 'Json', extensions: ['json']}
+                            ]
+                        }, function(filename) {
+                            if (typeof filename != 'object' || filename.length == 0) {
+                                return;
+                            }
+
+                            if (typeof mainWindow.webContents != 'object') {
+                                return;
+                            }
+
+                            var script = 'setConfigFile('+JSON.stringify(filename[0])+')';
+                            mainWindow.webContents.executeJavaScript(script);
                         });
                     }
                 },
