@@ -9,7 +9,11 @@ require('./resources/third-party/json-format/json-format.js');
 require('./resources/third-party/jquery.rainbowJSON/js/jquery.rainbowJSON.js');
 
 var fs = require('fs');
-var configFile = __dirname + '/.config.json';
+var configFile = __dirname+ds()+'.config.json';
+
+function ds() {
+    return process.platform.match(/^win/i) ? '\\' : '/';
+}
 
 function setConfigFile(filename) {
     var _configFile = String(filename);
