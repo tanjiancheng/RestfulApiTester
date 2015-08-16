@@ -15,3 +15,7 @@ cp misc/config.example.json .config.json
 electron ./
 ```
 
+## Screenshot
+
+![](misc/screenshot.png)
+
