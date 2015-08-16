@@ -302,20 +302,6 @@ function getTests() {
         }
     }
 
-    data.tests.sort(function(a, b) {
-        if (a.group > b.group) {
-            return true;
-        } else if (a.group < b.group) {
-            return false;
-        } else if (a.name > b.name) {
-            return true;
-        } else if (a.name < b.name) {
-            return false;
-        } else {
-            return true;
-        }
-    });
-
     var _data = {};
     for (var i = 0; i < data.tests.length; i++) {
         var test = data.tests[i];
